@@ -4,21 +4,26 @@ export default function ApiKeyPrompt({ onSave }) {
   const [key, setKey] = useState('')
 
   return (
-    <div style={{ textAlign: 'center', paddingTop: 60 }}>
-      <h1 style={{
-        fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 700,
-        marginBottom: 8, color: 'var(--text)'
-      }}>
-        Тарілка дня
-      </h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 32, fontSize: '0.95rem' }}>
-        Щоденник харчування з оцінкою калорій
-      </p>
+    <div style={{ paddingTop: 48 }}>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{
+          fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em',
+          color: 'var(--text-primary)', marginBottom: 4
+        }}>
+          Тарілка дня
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+          Щоденник харчування з оцінкою калорій
+        </div>
+      </div>
       <div style={{
         background: 'var(--bg-card)', borderRadius: 'var(--radius)',
-        border: '1px solid var(--border-light)', padding: 24, textAlign: 'left'
+        border: '1px solid var(--border)', padding: 16
       }}>
-        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: 8 }}>
+        <label style={{
+          display: 'block', fontSize: 12, fontWeight: 500,
+          color: 'var(--text-secondary)', marginBottom: 6
+        }}>
           Anthropic API ключ
         </label>
         <input
@@ -27,20 +32,21 @@ export default function ApiKeyPrompt({ onSave }) {
           onChange={e => setKey(e.target.value)}
           placeholder="sk-ant-..."
           style={{
-            width: '100%', padding: '10px 12px', fontSize: '0.9rem',
-            fontFamily: 'var(--font-mono)', marginBottom: 16
+            width: '100%', padding: '7px 10px', fontSize: 13,
+            fontVariantNumeric: 'tabular-nums', marginBottom: 8
           }}
         />
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 16 }}>
+        <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 14, lineHeight: 1.4 }}>
           Ключ зберігається тільки локально у вашому браузері.
         </p>
         <button
           onClick={() => key.trim() && onSave(key.trim())}
           disabled={!key.trim()}
           style={{
-            width: '100%', padding: '12px', fontSize: '0.95rem', fontWeight: 600,
+            width: '100%', padding: 9, fontSize: 13, fontWeight: 500,
             background: key.trim() ? 'var(--accent)' : 'var(--border)',
-            color: '#fff', borderRadius: 'var(--radius-sm)', transition: 'background 0.15s'
+            color: '#fff', borderRadius: 'var(--radius-sm)',
+            transition: 'background 0.12s'
           }}
         >
           Зберегти та почати

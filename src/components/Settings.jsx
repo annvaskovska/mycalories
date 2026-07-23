@@ -13,30 +13,30 @@ export default function Settings({ targets, onUpdate, apiKey, onApiKeyChange }) 
   }
 
   const fields = [
-    { key: 'kcal', label: 'Калорії (ккал)', color: 'var(--cal-color)' },
-    { key: 'protein', label: 'Білки (г)', color: 'var(--protein-color)' },
-    { key: 'fat', label: 'Жири (г)', color: 'var(--fat-color)' },
-    { key: 'carbs', label: 'Вуглеводи (г)', color: 'var(--carbs-color)' },
+    { key: 'kcal', label: 'Калорії (ккал)' },
+    { key: 'protein', label: 'Білки (г)' },
+    { key: 'fat', label: 'Жири (г)' },
+    { key: 'carbs', label: 'Вуглеводи (г)' },
   ]
 
   return (
     <div style={{
-      background: 'var(--bg-card)', borderRadius: 'var(--radius)',
-      border: '1px solid var(--border-light)', padding: 16, marginBottom: 16
+      border: '1px solid var(--border)', borderRadius: 'var(--radius)',
+      padding: 12, marginBottom: 12
     }}>
       <div style={{
-        fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase',
-        letterSpacing: '0.05em', color: 'var(--text-muted)', marginBottom: 14
+        fontSize: 10.5, fontWeight: 500, textTransform: 'uppercase',
+        letterSpacing: '0.04em', color: 'var(--text-muted)', marginBottom: 10
       }}>
         Денні цілі
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 12 }}>
         {fields.map(f => (
           <div key={f.key}>
             <label style={{
-              display: 'block', fontSize: '0.75rem', fontWeight: 500,
-              color: f.color, marginBottom: 4
+              display: 'block', fontSize: 11, fontWeight: 500,
+              color: 'var(--text-secondary)', marginBottom: 4
             }}>
               {f.label}
             </label>
@@ -50,10 +50,10 @@ export default function Settings({ targets, onUpdate, apiKey, onApiKeyChange }) 
         ))}
       </div>
 
-      <div style={{ marginBottom: 14 }}>
+      <div style={{ marginBottom: 12 }}>
         <label style={{
-          display: 'block', fontSize: '0.75rem', fontWeight: 500,
-          color: 'var(--text-muted)', marginBottom: 4
+          display: 'block', fontSize: 11, fontWeight: 500,
+          color: 'var(--text-secondary)', marginBottom: 4
         }}>
           API ключ
         </label>
@@ -62,8 +62,8 @@ export default function Settings({ targets, onUpdate, apiKey, onApiKeyChange }) 
           value={key}
           onChange={e => setKey(e.target.value)}
           style={{
-            width: '100%', padding: '8px 10px', fontSize: '0.85rem',
-            fontFamily: 'var(--font-mono)'
+            width: '100%', padding: '6px 8px', fontSize: 13,
+            fontVariantNumeric: 'tabular-nums'
           }}
         />
       </div>
@@ -71,13 +71,13 @@ export default function Settings({ targets, onUpdate, apiKey, onApiKeyChange }) 
       <button
         onClick={handleSave}
         style={{
-          width: '100%', padding: '10px', fontSize: '0.85rem', fontWeight: 600,
-          background: saved ? 'var(--carbs-color)' : 'var(--text)',
+          width: '100%', padding: 8, fontSize: 13, fontWeight: 500,
+          background: saved ? '#16A34A' : 'var(--accent)',
           color: '#fff', borderRadius: 'var(--radius-sm)',
-          transition: 'background 0.15s'
+          transition: 'background 0.12s'
         }}
       >
-        {saved ? 'Збережено ✓' : 'Зберегти'}
+        {saved ? 'Збережено' : 'Зберегти'}
       </button>
     </div>
   )

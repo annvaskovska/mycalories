@@ -41,6 +41,23 @@ function saveApiKey(key) {
   localStorage.setItem('anthropic_api_key', key)
 }
 
+function SettingsIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  )
+}
+
+function CloseIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+      <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+  )
+}
+
 export default function App() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [entries, setEntries] = useState([])
@@ -102,25 +119,25 @@ export default function App() {
     <div>
       <header style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        marginBottom: 20, paddingBottom: 12, borderBottom: `1px solid var(--border-light)`
+        marginBottom: 0, padding: '4px 0'
       }}>
-        <h1 style={{
-          fontFamily: 'var(--font-display)', fontSize: '1.6rem', fontWeight: 700,
-          color: 'var(--text)', letterSpacing: '-0.02em'
+        <span style={{
+          fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em',
+          color: 'var(--text-primary)'
         }}>
           Тарілка дня
-        </h1>
+        </span>
         <button
           onClick={() => setShowSettings(!showSettings)}
           style={{
-            padding: '6px 14px', fontSize: '0.85rem', fontWeight: 500,
+            width: 26, height: 26,
             border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
-            background: showSettings ? 'var(--text)' : 'transparent',
-            color: showSettings ? 'var(--bg-card)' : 'var(--text-muted)',
-            transition: 'all 0.15s'
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--text-secondary)', transition: 'color 0.12s',
+            background: showSettings ? 'var(--bg-card)' : 'transparent'
           }}
         >
-          {showSettings ? '✕' : '⚙'}
+          {showSettings ? <CloseIcon /> : <SettingsIcon />}
         </button>
       </header>
 

@@ -55,14 +55,10 @@ export default function FoodInput({ apiKey, onEstimated, disabled }) {
   }
 
   return (
-    <div style={{
-      background: 'var(--bg-card)', borderRadius: 'var(--radius)',
-      border: '1px solid var(--border-light)', padding: 16, marginBottom: 16
-    }}>
+    <div style={{ marginBottom: 16 }}>
       <label style={{
-        display: 'block', fontSize: '0.8rem', fontWeight: 600,
-        textTransform: 'uppercase', letterSpacing: '0.05em',
-        color: 'var(--text-muted)', marginBottom: 8
+        display: 'block', fontSize: 12, color: 'var(--text-secondary)',
+        marginBottom: 6
       }}>
         Що ви їли?
       </label>
@@ -73,40 +69,42 @@ export default function FoodInput({ apiKey, onEstimated, disabled }) {
         placeholder="яєчня, скибка сиру, помідор / капучино / спагеті з ковбаскою гриль"
         rows={3}
         style={{
-          width: '100%', padding: '10px 12px', fontSize: '0.9rem',
+          width: '100%', padding: '8px 10px', fontSize: 13,
           borderRadius: 'var(--radius-sm)', resize: 'vertical',
-          border: '1px solid var(--border)', background: disabled ? 'var(--bg)' : 'var(--bg-card)'
+          border: '1px solid var(--border)',
+          background: disabled ? 'var(--bg-card)' : 'var(--bg-page)',
+          lineHeight: 1.45
         }}
       />
-      <div style={{ display: 'flex', gap: 8, marginTop: 10, alignItems: 'center' }}>
-        <button
-          onClick={handleSubmit}
-          disabled={!text.trim() || loading || disabled}
-          style={{
-            flex: 1, padding: '11px 16px', fontSize: '0.9rem', fontWeight: 600,
-            background: (!text.trim() || loading || disabled) ? 'var(--border)' : 'var(--accent)',
-            color: '#fff', borderRadius: 'var(--radius-sm)',
-            transition: 'background 0.15s', position: 'relative'
-          }}
-        >
-          {loading ? (
-            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <Spinner /> Оцінюю…
-            </span>
-          ) : 'Оцінити'}
-        </button>
-      </div>
+      <button
+        onClick={handleSubmit}
+        disabled={!text.trim() || loading || disabled}
+        style={{
+          width: '100%', padding: 9, fontSize: 13, fontWeight: 500,
+          marginTop: 8,
+          background: (!text.trim() || loading || disabled) ? 'var(--border-subtle)' : 'var(--accent)',
+          color: (!text.trim() || loading || disabled) ? 'var(--text-muted)' : '#fff',
+          borderRadius: 'var(--radius-sm)',
+          transition: 'background 0.12s'
+        }}
+      >
+        {loading ? (
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <Spinner /> Оцінюю…
+          </span>
+        ) : 'Оцінити'}
+      </button>
       {error && (
         <div style={{
-          marginTop: 10, padding: '10px 12px', fontSize: '0.82rem',
-          background: '#f5e6e3', color: '#8a4a3d', borderRadius: 'var(--radius-sm)',
-          border: '1px solid #e8cfc9'
+          marginTop: 8, padding: '8px 10px', fontSize: 12,
+          background: '#FEF2F2', color: '#991B1B', borderRadius: 'var(--radius-sm)',
+          border: '1px solid #FECACA', lineHeight: 1.4
         }}>
-          <div style={{ marginBottom: 6 }}>{error}</div>
+          <div style={{ marginBottom: 4 }}>{error}</div>
           <button
             onClick={handleSubmit}
             style={{
-              fontSize: '0.8rem', fontWeight: 600, color: 'var(--accent)',
+              fontSize: 11, fontWeight: 500, color: 'var(--accent)',
               textDecoration: 'underline', textUnderlineOffset: 2
             }}
           >
@@ -120,12 +118,12 @@ export default function FoodInput({ apiKey, onEstimated, disabled }) {
 
 function Spinner() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" style={{
-      animation: 'spin 0.8s linear infinite'
+    <svg width="14" height="14" viewBox="0 0 16 16" style={{
+      animation: 'spin 0.7s linear infinite'
     }}>
       <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
-      <circle cx="8" cy="8" r="6" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
-      <path d="M8 2a6 6 0 0 1 6 6" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="8" cy="8" r="6" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
+      <path d="M8 2a6 6 0 0 1 6 6" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   )
 }
