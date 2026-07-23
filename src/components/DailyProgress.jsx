@@ -4,63 +4,56 @@ function sumField(entries, field) {
   return entries.reduce((s, e) => s + (e[field] || 0), 0)
 }
 
-function ProgressRing({ current, target, color, fillColor, label, unit, size = 72 }) {
-  const strokeWidth = 6
-  const r = (size - strokeWidth) / 2
-  const circumference = 2 * Math.PI * r
+function ProgressBar({ current, target, trackColor, fillColor }) {
   const pct = target > 0 ? Math.min(current / target, 1) : 0
-  const isOver = current > target && target > 0
-  const offset = circumference * (1 - pct)
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-      <div style={{ position: 'relative', width: size, height: size }}>
-        <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-          <circle
-            cx={size / 2} cy={size / 2} r={r}
-            fill="none" stroke="var(--border-light)" strokeWidth={strokeWidth}
-          />
-          <circle
-            cx={size / 2} cy={size / 2} r={r}
-            fill="none"
-            stroke={isOver ? 'var(--danger)' : fillColor}
-            strokeWidth={strokeWidth}
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            style={{ transition: 'stroke-dashoffset 0.4s ease' }}
-          />
-        </svg>
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-        }}>
-          <span style={{
-            fontFamily: 'var(--font-mono)', fontSize: '0.85rem', fontWeight: 500,
-            color: isOver ? 'var(--danger)' : color, lineHeight: 1.1
-          }}>
-            {Math.round(current)}
-          </span>
-        </div>
-      </div>
-      <span style={{
-        fontSize: '0.7rem', fontWeight: 600, color,
-        textTransform: 'uppercase', letterSpacing: '0.04em'
+    <div style={{
+      height: 4, borderRadius: 2, background: trackColor, width: '100%', overflow: 'hidden'
+    }}>
+      <div style={{
+        height: '100%', borderRadius: 2, background: fillColor,
+        width: `${pct * 100}%`, transition: 'width 0.3s ease'
+      }} />
+    </div>
+  )
+}
+
+function MacroCard({ label, current, target, unit, color, bgColor }) {
+  const isOver = current > target && target > 0
+  return (
+    <div style={{
+      border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius)',
+      padding: 10
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6
       }}>
-        {label}
-      </span>
-      <span style={{
-        fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-muted)'
+        <div style={{
+          width: 6, height: 6, borderRadius: 2, background: color, flexShrink: 0
+        }} />
+        <span style={{ fontSize: 10.5, color: 'var(--text-secondary)' }}>
+          {label}
+        </span>
+      </div>
+      <div style={{
+        fontSize: 13, fontWeight: 500, color: 'var(--text-primary)',
+        fontVariantNumeric: 'tabular-nums', marginBottom: 6
       }}>
         {Math.round(current)}/{target}{unit}
-      </span>
+      </div>
+      <ProgressBar
+        current={current}
+        target={target}
+        trackColor={bgColor}
+        fillColor={color}
+      />
       {isOver && (
-        <span style={{
-          fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
-          color: 'var(--danger)', fontWeight: 500
+        <div style={{
+          fontSize: 9.5, color, fontWeight: 500, marginTop: 4,
+          fontVariantNumeric: 'tabular-nums'
         }}>
           +{Math.round(current - target)}{unit} понад
-        </span>
+        </div>
       )}
     </div>
   )
@@ -75,33 +68,54 @@ export default function DailyProgress({ entries, targets }) {
   }), [entries])
 
   return (
-    <div style={{
-      background: 'var(--bg-card)', borderRadius: 'var(--radius)',
-      border: '1px solid var(--border-light)', padding: '20px 8px',
-      marginBottom: 20, overflow: 'hidden'
-    }}>
+    <div style={{ marginBottom: 16 }}>
       <div style={{
-        display: 'flex', justifyContent: 'space-around', alignItems: 'flex-start'
+        display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 10
       }}>
-        <ProgressRing
-          current={totals.kcal} target={targets.kcal}
-          color="var(--cal-color)" fillColor="var(--cal-fill)"
-          label="ккал" unit=""
-        />
-        <ProgressRing
+        <span style={{
+          fontSize: 30, fontWeight: 500, letterSpacing: '-0.02em',
+          color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums',
+          lineHeight: 1
+        }}>
+          {Math.round(totals.kcal)}
+        </span>
+        <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+          / {targets.kcal} ккал
+        </span>
+      </div>
+      <ProgressBar
+        current={totals.kcal}
+        target={targets.kcal}
+        trackColor="var(--border-subtle)"
+        fillColor="var(--accent)"
+      />
+      {totals.kcal > targets.kcal && (
+        <div style={{
+          fontSize: 9.5, color: 'var(--accent)', fontWeight: 500, marginTop: 4,
+          fontVariantNumeric: 'tabular-nums'
+        }}>
+          +{Math.round(totals.kcal - targets.kcal)} ккал понад
+        </div>
+      )}
+
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: 8, marginTop: 12
+      }}>
+        <MacroCard
+          label="Білки"
           current={totals.protein} target={targets.protein}
-          color="var(--protein-color)" fillColor="var(--protein-fill)"
-          label="Білки" unit="г"
+          unit="г" color="var(--macro-protein)" bgColor="var(--macro-protein-bg)"
         />
-        <ProgressRing
+        <MacroCard
+          label="Жири"
           current={totals.fat} target={targets.fat}
-          color="var(--fat-color)" fillColor="var(--fat-fill)"
-          label="Жири" unit="г"
+          unit="г" color="var(--macro-fat)" bgColor="var(--macro-fat-bg)"
         />
-        <ProgressRing
+        <MacroCard
+          label="Вуглеводи"
           current={totals.carbs} target={targets.carbs}
-          color="var(--carbs-color)" fillColor="var(--carbs-fill)"
-          label="Вуглев." unit="г"
+          unit="г" color="var(--macro-carbs)" bgColor="var(--macro-carbs-bg)"
         />
       </div>
     </div>

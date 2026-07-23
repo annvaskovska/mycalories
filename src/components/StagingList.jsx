@@ -1,3 +1,11 @@
+function CloseIcon({ size = 12 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+  )
+}
+
 export default function StagingList({ items, onChange, onConfirm, onCancel }) {
   const updateItem = (idx, field, value) => {
     const updated = items.map((item, i) =>
@@ -14,67 +22,66 @@ export default function StagingList({ items, onChange, onConfirm, onCancel }) {
 
   return (
     <div style={{
-      background: 'var(--bg-card)', borderRadius: 'var(--radius)',
-      border: '2px solid var(--accent)', padding: 16, marginBottom: 16
+      borderRadius: 'var(--radius)', marginBottom: 16,
+      border: '1px solid var(--accent)', padding: 12
     }}>
       <div style={{
-        fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase',
-        letterSpacing: '0.05em', color: 'var(--accent)', marginBottom: 12
+        fontSize: 10.5, fontWeight: 500, textTransform: 'uppercase',
+        letterSpacing: '0.04em', color: 'var(--accent)', marginBottom: 10
       }}>
         Перевірте оцінку
       </div>
 
       {items.map((item, idx) => (
         <div key={idx} style={{
-          padding: '10px 0',
-          borderBottom: idx < items.length - 1 ? '1px solid var(--border-light)' : 'none'
+          padding: '8px 0',
+          borderTop: idx > 0 ? '1px solid var(--border-subtle)' : 'none'
         }}>
           <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            marginBottom: 8
+            display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6
           }}>
             <input
               type="text"
               value={item.name}
               onChange={e => updateItem(idx, 'name', e.target.value)}
               style={{
-                flex: 1, padding: '6px 8px', fontSize: '0.9rem', fontWeight: 500,
-                border: '1px solid var(--border-light)', marginRight: 8
+                flex: 1, padding: '5px 8px', fontSize: 12.5, fontWeight: 500,
+                border: '1px solid var(--border-subtle)'
               }}
             />
             <button
               onClick={() => deleteItem(idx)}
               style={{
-                width: 30, height: 30, fontSize: '0.85rem',
-                color: 'var(--danger)', borderRadius: 'var(--radius-sm)',
-                border: '1px solid var(--border-light)',
+                width: 22, height: 22,
+                color: 'var(--text-muted)', borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border-subtle)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0
               }}
             >
-              ✕
+              <CloseIcon size={10} />
             </button>
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <MacroField label="ккал" value={item.kcal} color="var(--cal-color)"
+            <MacroField label="ккал" value={item.kcal}
               onChange={v => updateItem(idx, 'kcal', v)} />
-            <MacroField label="Б" value={item.protein} color="var(--protein-color)"
+            <MacroField label="Б" value={item.protein}
               onChange={v => updateItem(idx, 'protein', v)} />
-            <MacroField label="Ж" value={item.fat} color="var(--fat-color)"
+            <MacroField label="Ж" value={item.fat}
               onChange={v => updateItem(idx, 'fat', v)} />
-            <MacroField label="В" value={item.carbs} color="var(--carbs-color)"
+            <MacroField label="В" value={item.carbs}
               onChange={v => updateItem(idx, 'carbs', v)} />
           </div>
         </div>
       ))}
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+      <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
         <button
           onClick={onCancel}
           style={{
-            flex: 1, padding: '10px', fontSize: '0.85rem', fontWeight: 500,
+            flex: 1, padding: 8, fontSize: 12.5, fontWeight: 500,
             border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)',
-            background: 'transparent', color: 'var(--text-muted)'
+            color: 'var(--text-secondary)'
           }}
         >
           Скасувати
@@ -82,7 +89,7 @@ export default function StagingList({ items, onChange, onConfirm, onCancel }) {
         <button
           onClick={onConfirm}
           style={{
-            flex: 2, padding: '10px', fontSize: '0.9rem', fontWeight: 600,
+            flex: 2, padding: 8, fontSize: 13, fontWeight: 500,
             background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-sm)'
           }}
         >
@@ -93,12 +100,12 @@ export default function StagingList({ items, onChange, onConfirm, onCancel }) {
   )
 }
 
-function MacroField({ label, value, color, onChange }) {
+function MacroField({ label, value, onChange }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
       <span style={{
-        fontSize: '0.7rem', fontWeight: 600, color,
-        minWidth: 24, textAlign: 'right'
+        fontSize: 11, color: 'var(--text-muted)',
+        minWidth: 20, textAlign: 'right'
       }}>
         {label}
       </span>
@@ -106,7 +113,7 @@ function MacroField({ label, value, color, onChange }) {
         type="number"
         value={value}
         onChange={e => onChange(e.target.value)}
-        style={{ width: 60 }}
+        style={{ width: 56, fontSize: 12, padding: '4px 6px' }}
       />
     </div>
   )

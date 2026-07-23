@@ -7,50 +7,48 @@
 }
 
 :root {
-  --bg: #f5f0e8;
-  --bg-card: #faf7f2;
-  --text: #3d3530;
-  --text-muted: #8a7e76;
-  --border: #e0d8cf;
-  --border-light: #ece6dd;
+  --bg-page: #FFFFFF;
+  --bg-card: #FBFBFC;
+  --border: #E4E5EA;
+  --border-subtle: #EDEEF2;
 
-  --cal-color: #5c504a;
-  --cal-fill: #8a7e76;
-  --protein-color: #b5705a;
-  --protein-fill: #c98a74;
-  --fat-color: #c4a44a;
-  --fat-fill: #d4bb6e;
-  --carbs-color: #7a916a;
-  --carbs-fill: #96ad84;
+  --text-primary: #08090A;
+  --text-secondary: #6B7280;
+  --text-muted: #9297A3;
 
-  --accent: #b5705a;
-  --accent-hover: #a3624e;
-  --danger: #c47a6a;
-  --danger-hover: #b06858;
+  --accent: #5E6AD2;
 
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
+  --macro-protein: #B8654F;
+  --macro-protein-bg: #F1E4E1;
+  --macro-fat: #C99A4B;
+  --macro-fat-bg: #F3ECDC;
+  --macro-carbs: #6B8F6F;
+  --macro-carbs-bg: #E4EBE4;
 
-  --radius: 12px;
-  --radius-sm: 8px;
+  --danger: #DC2626;
+
+  --font-ui: 'Inter', -apple-system, system-ui, sans-serif;
+
+  --radius: 8px;
+  --radius-sm: 6px;
 }
 
 html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  font-family: var(--font-body);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.5;
+  font-family: var(--font-ui);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.45;
   min-height: 100dvh;
 }
 
 button {
-  font-family: var(--font-body);
+  font-family: var(--font-ui);
   cursor: pointer;
   border: none;
   background: none;
@@ -59,13 +57,13 @@ button {
 
 input,
 textarea {
-  font-family: var(--font-body);
-  color: var(--text);
+  font-family: var(--font-ui);
+  color: var(--text-primary);
   border: 1px solid var(--border);
   background: var(--bg-card);
   border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.12s;
 }
 
 input:focus,
@@ -74,10 +72,11 @@ textarea:focus {
 }
 
 input[type="number"] {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  padding: 6px 8px;
-  width: 80px;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 8px;
+  width: 72px;
   text-align: right;
   -moz-appearance: textfield;
 }
@@ -88,7 +87,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 #root {
-  max-width: 480px;
+  max-width: 420px;
   margin: 0 auto;
-  padding: 16px 16px 80px;
+  padding: 12px 16px 64px;
 }
