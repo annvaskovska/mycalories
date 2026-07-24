@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 
 function sumField(entries, field) {
   return entries.reduce((s, e) => s + (e[field] || 0), 0)
@@ -18,13 +18,28 @@ function ProgressBar({ current, target, trackColor, fillColor }) {
   )
 }
 
-function MacroCard({ label, current, target, unit, color, bgColor }) {
+function MacroCard({ label, current, target, unit, color, bgColor, onClick }) {
   const isOver = current > target && target > 0
   return (
-    <div style={{
-      border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius)',
-      padding: 10
-    }}>
+    <button
+      onClick={onClick}
+      style={{
+        border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius)',
+        padding: 10, textAlign: 'left', width: '100%',
+        background: 'none', cursor: 'pointer',
+        transition: 'background 0.12s, border-color 0.12s'
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = bgColor
+        e.currentTarget.style.borderColor = color
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = 'none'
+        e.currentTarget.style.borderColor = 'var(--border-subtle)'
+      }}
+      onMouseDown={e => e.currentTarget.style.opacity = '0.8'}
+      onMouseUp={e => e.currentTarget.style.opacity = '1'}
+    >
       <div style={{
         display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6
       }}>
@@ -55,11 +70,124 @@ function MacroCard({ label, current, target, unit, color, bgColor }) {
           +{Math.round(current - target)}{unit} понад
         </div>
       )}
+    </button>
+  )
+}
+
+function MacroBreakdownModal({ label, field, color, entries, total, onClose }) {
+  const sorted = useMemo(() =>
+    entries
+      .filter(e => (e[field] || 0) > 0)
+      .sort((a, b) => (b[field] || 0) - (a[field] || 0)),
+    [entries, field]
+  )
+
+  useEffect(() => {
+    const handleKey = (e) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [onClose])
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        zIndex: 1000, padding: 16
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: 'var(--bg-page)', borderRadius: 12,
+          width: '100%', maxWidth: 420, maxHeight: '70vh',
+          display: 'flex', flexDirection: 'column',
+          boxShadow: '0 -4px 24px rgba(0,0,0,0.08)'
+        }}
+      >
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '14px 16px 10px', borderBottom: '1px solid var(--border-subtle)',
+          flexShrink: 0
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{
+              width: 8, height: 8, borderRadius: 3, background: color
+            }} />
+            <span style={{
+              fontSize: 14, fontWeight: 500, color: 'var(--text-primary)'
+            }}>
+              {label} — {Math.round(total)} г
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              width: 24, height: 24, display: 'flex', alignItems: 'center',
+              justifyContent: 'center', color: 'var(--text-muted)',
+              borderRadius: 'var(--radius-sm)', transition: 'color 0.12s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div style={{ overflowY: 'auto', padding: '4px 16px 16px' }}>
+          {sorted.length === 0 ? (
+            <div style={{
+              textAlign: 'center', padding: '24px 0',
+              color: 'var(--text-muted)', fontSize: 12
+            }}>
+              Немає записів з цим макронутрієнтом
+            </div>
+          ) : (
+            sorted.map(entry => (
+              <div key={entry.id} style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '10px 0', borderBottom: '1px solid var(--border-subtle)'
+              }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{
+                    fontSize: 12.5, fontWeight: 500, wordBreak: 'break-word'
+                  }}>
+                    {entry.name}
+                  </div>
+                  <div style={{
+                    fontSize: 11, color: 'var(--text-muted)',
+                    fontVariantNumeric: 'tabular-nums', marginTop: 1
+                  }}>
+                    {entry.time}
+                  </div>
+                </div>
+                <span style={{
+                  fontSize: 13, fontWeight: 600, color,
+                  fontVariantNumeric: 'tabular-nums', flexShrink: 0, marginLeft: 12
+                }}>
+                  {entry[field]} г
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   )
 }
 
+const MACROS = [
+  { label: 'Білки', field: 'protein', color: 'var(--macro-protein)', bgColor: 'var(--macro-protein-bg)' },
+  { label: 'Жири', field: 'fat', color: 'var(--macro-fat)', bgColor: 'var(--macro-fat-bg)' },
+  { label: 'Вуглеводи', field: 'carbs', color: 'var(--macro-carbs)', bgColor: 'var(--macro-carbs-bg)' },
+]
+
 export default function DailyProgress({ entries, targets }) {
+  const [activeMacro, setActiveMacro] = useState(null)
+
   const totals = useMemo(() => ({
     kcal: sumField(entries, 'kcal'),
     protein: sumField(entries, 'protein'),
@@ -102,22 +230,27 @@ export default function DailyProgress({ entries, targets }) {
         display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
         gap: 8, marginTop: 12
       }}>
-        <MacroCard
-          label="Білки"
-          current={totals.protein} target={targets.protein}
-          unit="г" color="var(--macro-protein)" bgColor="var(--macro-protein-bg)"
-        />
-        <MacroCard
-          label="Жири"
-          current={totals.fat} target={targets.fat}
-          unit="г" color="var(--macro-fat)" bgColor="var(--macro-fat-bg)"
-        />
-        <MacroCard
-          label="Вуглеводи"
-          current={totals.carbs} target={targets.carbs}
-          unit="г" color="var(--macro-carbs)" bgColor="var(--macro-carbs-bg)"
-        />
+        {MACROS.map(m => (
+          <MacroCard
+            key={m.field}
+            label={m.label}
+            current={totals[m.field]} target={targets[m.field]}
+            unit="г" color={m.color} bgColor={m.bgColor}
+            onClick={() => setActiveMacro(m)}
+          />
+        ))}
       </div>
+
+      {activeMacro && (
+        <MacroBreakdownModal
+          label={activeMacro.label}
+          field={activeMacro.field}
+          color={activeMacro.color}
+          entries={entries}
+          total={totals[activeMacro.field]}
+          onClose={() => setActiveMacro(null)}
+        />
+      )}
     </div>
   )
 }
