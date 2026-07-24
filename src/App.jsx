@@ -6,11 +6,21 @@ import EntryLog from './components/EntryLog'
 import Settings from './components/Settings'
 import DateNav from './components/DateNav'
 import ApiKeyPrompt from './components/ApiKeyPrompt'
+import TabBar from './components/TabBar'
+import CalendarView from './components/CalendarView'
 
 const DEFAULT_TARGETS = { kcal: 1650, protein: 115, fat: 57, carbs: 160 }
 
+const TABS = [
+  { id: 'today', label: 'Сьогодні' },
+  { id: 'calendar', label: 'Календар' },
+]
+
 function dateKey(d) {
-  return d.toISOString().slice(0, 10)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
 function loadEntries(date) {
@@ -59,6 +69,7 @@ function CloseIcon() {
 }
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState('today')
   const [currentDate, setCurrentDate] = useState(new Date())
   const [entries, setEntries] = useState([])
   const [targets, setTargets] = useState(loadTargets)
@@ -111,6 +122,11 @@ export default function App() {
     })
   }
 
+  const handleCalendarDateSelect = (date) => {
+    setCurrentDate(date)
+    setActiveTab('today')
+  }
+
   if (!apiKey) {
     return <ApiKeyPrompt onSave={handleApiKeySave} />
   }
@@ -150,33 +166,44 @@ export default function App() {
         />
       )}
 
-      <div className="app-columns">
-        <div className="app-col-left">
-          <DateNav
-            date={currentDate}
-            isToday={isToday}
-            onPrev={() => goDay(-1)}
-            onNext={() => goDay(1)}
-            onToday={() => setCurrentDate(new Date())}
-          />
-          <DailyProgress entries={entries} targets={targets} />
-        </div>
-
-        <div className="app-col-right">
-          <FoodInput apiKey={apiKey} onEstimated={handleEstimated} disabled={!!stagedItems} />
-
-          {stagedItems && (
-            <StagingList
-              items={stagedItems}
-              onChange={setStagedItems}
-              onConfirm={handleConfirmStaged}
-              onCancel={() => setStagedItems(null)}
+      {activeTab === 'today' && (
+        <div className="app-columns">
+          <div className="app-col-left">
+            <DateNav
+              date={currentDate}
+              isToday={isToday}
+              onPrev={() => goDay(-1)}
+              onNext={() => goDay(1)}
+              onToday={() => setCurrentDate(new Date())}
             />
-          )}
+            <DailyProgress entries={entries} targets={targets} />
+          </div>
 
-          <EntryLog entries={entries} onDelete={handleDeleteEntry} />
+          <div className="app-col-right">
+            <FoodInput apiKey={apiKey} onEstimated={handleEstimated} disabled={!!stagedItems} />
+
+            {stagedItems && (
+              <StagingList
+                items={stagedItems}
+                onChange={setStagedItems}
+                onConfirm={handleConfirmStaged}
+                onCancel={() => setStagedItems(null)}
+              />
+            )}
+
+            <EntryLog entries={entries} onDelete={handleDeleteEntry} />
+          </div>
         </div>
-      </div>
+      )}
+
+      {activeTab === 'calendar' && (
+        <CalendarView
+          target={targets.kcal}
+          onSelectDate={handleCalendarDateSelect}
+        />
+      )}
+
+      <TabBar tabs={TABS} activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   )
 }
