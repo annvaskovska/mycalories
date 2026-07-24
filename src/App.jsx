@@ -150,28 +150,33 @@ export default function App() {
         />
       )}
 
-      <DateNav
-        date={currentDate}
-        isToday={isToday}
-        onPrev={() => goDay(-1)}
-        onNext={() => goDay(1)}
-        onToday={() => setCurrentDate(new Date())}
-      />
+      <div className="app-columns">
+        <div className="app-col-left">
+          <DateNav
+            date={currentDate}
+            isToday={isToday}
+            onPrev={() => goDay(-1)}
+            onNext={() => goDay(1)}
+            onToday={() => setCurrentDate(new Date())}
+          />
+          <DailyProgress entries={entries} targets={targets} />
+        </div>
 
-      <DailyProgress entries={entries} targets={targets} />
+        <div className="app-col-right">
+          <FoodInput apiKey={apiKey} onEstimated={handleEstimated} disabled={!!stagedItems} />
 
-      <FoodInput apiKey={apiKey} onEstimated={handleEstimated} disabled={!!stagedItems} />
+          {stagedItems && (
+            <StagingList
+              items={stagedItems}
+              onChange={setStagedItems}
+              onConfirm={handleConfirmStaged}
+              onCancel={() => setStagedItems(null)}
+            />
+          )}
 
-      {stagedItems && (
-        <StagingList
-          items={stagedItems}
-          onChange={setStagedItems}
-          onConfirm={handleConfirmStaged}
-          onCancel={() => setStagedItems(null)}
-        />
-      )}
-
-      <EntryLog entries={entries} onDelete={handleDeleteEntry} />
+          <EntryLog entries={entries} onDelete={handleDeleteEntry} />
+        </div>
+      </div>
     </div>
   )
 }
