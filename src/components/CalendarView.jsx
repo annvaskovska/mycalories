@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import MacroHistory from './MacroHistory'
 
 const MONTH_NAMES = [
   'Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
@@ -86,9 +87,13 @@ function ChevronRight() {
   )
 }
 
-export default function CalendarView({ target, onSelectDate }) {
+export default function CalendarView({ targets, onSelectDate }) {
+  const target = targets.kcal
   const [viewYear, setViewYear] = useState(() => new Date().getFullYear())
   const [viewMonth, setViewMonth] = useState(() => new Date().getMonth())
+  const [selectedDay, setSelectedDay] = useState(null)
+
+  useEffect(() => { setSelectedDay(null) }, [viewYear, viewMonth])
 
   const cells = useMemo(() => getMonthDays(viewYear, viewMonth), [viewYear, viewMonth])
 
@@ -180,10 +185,13 @@ export default function CalendarView({ target, onSelectDate }) {
           const dk = dateKey(new Date(viewYear, viewMonth, day))
           const isToday = dk === todayKey
           const isFuture = dk > todayKey
+          const isSelected = day === selectedDay
 
           const style = STATUS_STYLES[status]
           const bg = style ? style.bg : 'transparent'
-          const borderColor = isToday ? 'var(--accent)' : style ? style.border : 'transparent'
+          const borderColor = isSelected || isToday
+            ? 'var(--accent)'
+            : style ? style.border : 'transparent'
 
           return (
             <button
@@ -194,13 +202,14 @@ export default function CalendarView({ target, onSelectDate }) {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 padding: '6px 0',
                 borderRadius: 'var(--radius-sm)',
-                fontSize: 12, fontWeight: isToday ? 600 : 400,
+                fontSize: 12, fontWeight: isToday || isSelected ? 600 : 400,
                 fontVariantNumeric: 'tabular-nums',
                 background: bg,
                 color: isFuture ? 'var(--text-muted)' : 'var(--text-primary)',
                 border: `1px solid ${borderColor}`,
+                boxShadow: isSelected ? '0 0 0 2px rgba(94,106,210,0.30)' : 'none',
                 cursor: isFuture ? 'default' : 'pointer',
-                transition: 'background 0.12s',
+                transition: 'background 0.12s, box-shadow 0.12s',
                 opacity: isFuture ? 0.45 : 1,
               }}
             >
@@ -236,6 +245,14 @@ export default function CalendarView({ target, onSelectDate }) {
           Немає
         </div>
       </div>
+
+      <MacroHistory
+        year={viewYear}
+        month={viewMonth}
+        targets={targets}
+        selectedDay={selectedDay}
+        onSelectDay={setSelectedDay}
+      />
     </div>
   )
 }

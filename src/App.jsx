@@ -198,7 +198,7 @@ export default function App() {
 
       {activeTab === 'calendar' && (
         <CalendarView
-          target={targets.kcal}
+          targets={targets}
           onSelectDate={handleCalendarDateSelect}
         />
       )}
