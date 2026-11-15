@@ -2,6 +2,8 @@
 
 **An AI food diary.** Describe what you ate in plain words, and Claude turns it into calories and macros. It shows the portions it assumed, so you can check the math. The app keeps your daily history, streaks and trends.
 
+**Try it:** [annvaskovska.github.io/mycalories](https://annvaskovska.github.io/mycalories/). Paste your own [Anthropic API key](https://console.anthropic.com/); it stays in your browser.
+
 ![Today screen: a typed meal estimated by Claude, each item listing the portions it assumed, with editable calories and macros](docs/screenshots/estimate.png)
 
 <sub>Typed: <i>«гречка з курячим філе, кайзерка з Almette і помідором, склянка кефіру»</i> (buckwheat with chicken, a kaiser roll with Almette and tomato, a glass of kefir). The estimate splits it into three items and lists the portion assumed for each ingredient. Every field stays editable until the meal goes into the diary. The interface is in Ukrainian; screenshots use demo data.</sub>
